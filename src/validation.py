@@ -28,7 +28,7 @@ def     delete_space(buffer):
 def     check_forbiden_char(buffer):
     for x in buffer:
         for n in x:
-            match = re.search(r'[^ABCDEFGHIJKLMNOPQRSTUVWXYZ()!+|^=><=>?\']', n)
+            match = re.search(r'[^A-Z()!+|^><=?\']', n)
             if (match):
                 print("Unknow symbol")
                 sys.exit(-1)
@@ -48,7 +48,7 @@ def     count_unknow(buffer):
             if (res != -1):
                 count += 1
     if (count != 1):
-        print ("too big Unknow line")
+        print ("Please one line with ?\nExample:\n?ABC")
         sys.exit(-1)
     if (count == 1):
         res = buffer[len(buffer) - 1][0]
@@ -100,6 +100,4 @@ def     validation(read_buffer):
     d = {"conditions" : [], "vars" : []}
     d = append_in_dic_conditions(buffer, d)
     d = init_true_or_false_var(buffer, d)
-    print (d['vars'])
-    sys.exit(1)
     return d
