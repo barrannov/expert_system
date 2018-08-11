@@ -59,7 +59,36 @@ def     count_unknow(buffer):
             print ("all variables known")
             sys.exit(-1)
 
+def     append_in_dic_conditions(buffer, d):
+    list_a = list()
+    [list_a.append(x) for x in buffer if (x != buffer[len(buffer) - 1]) and (x != buffer[len(buffer) - 2])]
+    d['conditions'] = list_a
+    return (d)
+
+def      init_true_or_false_var(buffer, d):
+    tmp_list = list()
+    for x in buffer:
+        for n in x:
+            if (n.isalpha()) == True:
+                tmp_list.append(n)
+    tmp_list = list(set(tmp_list))
+    d_tmp = {}
+    for x in tmp_list:
+        d_tmp[x] = False
+    x_none = buffer[len(buffer) - 1][0].replace("?", "")
+    for x in x_none:
+        d_tmp[x] = None
+    x_true = buffer[len(buffer) - 2][0].replace("=", "")
+    for x in x_true:
+        d_tmp[x] = True
+    d['vars'] = d_tmp
+    return (d)
+
 def     validation(read_buffer):
+    read_buffer = read_buffer.replace("!", " ! ")
+    read_buffer = read_buffer.replace("(", " ( ")
+    read_buffer = read_buffer.replace(")", " ) ")
+
     buffer = read_buffer.split('\n')
     buffer = delete_comment(buffer)
     buffer = delete_space(buffer)
@@ -68,7 +97,9 @@ def     validation(read_buffer):
     minimal_len(buffer)
     check_forbiden_char(buffer)
     count_unknow(buffer)
-
-    # [print(x) for x in buffer]
+    d = {"conditions" : [], "vars" : []}
+    d = append_in_dic_conditions(buffer, d)
+    d = init_true_or_false_var(buffer, d)
+    print (d['vars'])
     sys.exit(1)
-    return {'a' : 'b'}
+    return d
