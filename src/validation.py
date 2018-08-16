@@ -65,6 +65,43 @@ def     append_in_dic_conditions(buffer, d):
     d['conditions'] = list_a
     return (d)
 
+def     validation_only_one_implies(d):
+    for x in d['conditions']:
+        count = 0
+        for n in x:
+            if n == "=>":
+                count += 1
+            if (count == 2):
+                print("Need only one implies in 1 line")
+                sys.exit(-1)
+
+def     validation_only_one_if_and_only_if(d):
+    for x in d['conditions']:
+        count = 0
+        for n in x:
+            if n == "<=>":
+                count += 1
+            if (count == 2):
+                print("Need only one if and only if in 1 line")
+                sys.exit(-1)
+
+def     validation_brackets(d):
+    for x in d['conditions']:
+        count = 0
+        for n in x:
+            if (n == "("):
+                count += 1
+            if (n == ")"):
+                count -= 1
+            if (n == "<=>" or n == "=>"):
+                if (count != 0):
+                    print("Error in brackets")
+                    sys.exit(-1)
+                count = 0
+        if (count != 0):
+            print("Error in brackets")
+            sys.exit(-1)
+
 def      init_true_or_false_var(buffer, d):
     tmp_list = list()
     for x in buffer:
@@ -84,6 +121,20 @@ def      init_true_or_false_var(buffer, d):
     d['vars'] = d_tmp
     return (d)
 
+# def     validation_operator(d):
+#     for x in d['conditions']:
+#         old = '-1'
+#         for n in x:
+#             match = re.search(r'[^A-Z\']', n)
+#             if (match == None):
+#                 if (old == "v"):
+#                     print ('double var error')
+#                     sys.exit(-1)
+#                 old = 'v'
+#             match = re.search(r'[^!+|^\']', n)
+#             if (match == None):
+#                 if (old != "v")
+
 def     validation(read_buffer):
     read_buffer = read_buffer.replace("!", " ! ")
     read_buffer = read_buffer.replace("(", " ( ")
@@ -100,4 +151,12 @@ def     validation(read_buffer):
     d = {"conditions" : [], "vars" : []}
     d = append_in_dic_conditions(buffer, d)
     d = init_true_or_false_var(buffer, d)
+    validation_only_one_implies(d)
+    validation_only_one_if_and_only_if(d)
+    validation_brackets(d)
+    # validation_operator(d)
+
+    for x in d['conditions']:
+        print (x)
+    sys.exit(-1)
     return d
