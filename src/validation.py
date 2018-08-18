@@ -121,19 +121,25 @@ def      init_true_or_false_var(buffer, d):
     d['vars'] = d_tmp
     return (d)
 
-# def     validation_operator(d):
-#     for x in d['conditions']:
-#         old = '-1'
-#         for n in x:
-#             match = re.search(r'[^A-Z\']', n)
-#             if (match == None):
-#                 if (old == "v"):
-#                     print ('double var error')
-#                     sys.exit(-1)
-#                 old = 'v'
-#             match = re.search(r'[^!+|^\']', n)
-#             if (match == None):
-#                 if (old != "v")
+def     validation_operator(d):
+    for x in d['conditions']:
+        old = '0'
+        now = '0'
+        for n in x:
+            # match = re.search(r'[A-Z\']', n)
+            if (re.search(r'[A-Z\']', n)):
+                now = 'v'
+            # match = re.search(r'[!+|^\']', n)
+            if (re.search(r'[!+|^\']', n)):
+                now = 'o'
+            if (re.search(r'[()]', n)):
+                now = "c"
+            if (re.search(r'[=<>\']', n)):
+                now = "e"
+            print (now, end=" ")
+        print ("\n")
+    print ("valid")
+    sys.exit(-1)
 
 def     validation(read_buffer):
     read_buffer = read_buffer.replace("!", " ! ")
@@ -154,7 +160,7 @@ def     validation(read_buffer):
     validation_only_one_implies(d)
     validation_only_one_if_and_only_if(d)
     validation_brackets(d)
-    # validation_operator(d)
+    validation_operator(d)
 
     for x in d['conditions']:
         print (x)
