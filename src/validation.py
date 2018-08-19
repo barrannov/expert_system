@@ -121,24 +121,54 @@ def      init_true_or_false_var(buffer, d):
     d['vars'] = d_tmp
     return (d)
 
+def     error(y, x):
+    print("line " + str(y), "error in", x)
+    sys.exit(-1)
+
 def     validation_operator(d):
+    y = 0
     for x in d['conditions']:
         old = '0'
         now = '0'
+        j = 0
+        e = 0
         for n in x:
-            # match = re.search(r'[A-Z\']', n)
             if (re.search(r'[A-Z\']', n)):
                 now = 'v'
-            # match = re.search(r'[!+|^\']', n)
-            if (re.search(r'[!+|^\']', n)):
+            elif (re.search(r'[!+|^\']', n)):
                 now = 'o'
-            if (re.search(r'[()]', n)):
-                now = "c"
-            if (re.search(r'[=<>\']', n)):
+            elif (re.search(r'[<=>]', n)):
                 now = "e"
-            print (now, end=" ")
-        print ("\n")
+                e += 1
+            else:
+                now = n
+            if ((len(n) == 2 and n != ("=>")) or (len(n) == 3 and n != "<=>")):
+                error(y, x)
+            if ((now == "v" and old == "v") or (now == "o" and old == "o" and n != "!")):
+                error(y, x)
+            elif now == "o" and (old == "(" or old == "0" and n != "!"):
+                error(y, x)
+            elif (now == 'v' and old == ")"):
+                error(y, x)
+            elif now == ")" and old == "(":
+                error(y, x)
+            elif (now == ")" and (old == "o" or old == '0')):
+                error(y, x)
+            elif (now == "e" and (old == "o" or old == "0")):
+                error(y, x)
+            elif (n == "!" and ((old == "v" or old == ")") and old != "0")): # !A => A
+                error(y, x)
+            old = now
+            j += 1
+            if (j == len(x)) and (now != "v" and now != ")"):
+                print ("line " + str(y), 'error end in', x)
+                sys.exit(-1)
+        if (e != 1):
+            print ("line " + str(y), "error implies or if and only if operator")
+            sys.exit(-1)
+        y += 1
     print ("valid")
+    print (d)
     sys.exit(-1)
 
 def     validation(read_buffer):
@@ -162,6 +192,7 @@ def     validation(read_buffer):
     validation_brackets(d)
     validation_operator(d)
 
+    print (d)
     for x in d['conditions']:
         print (x)
     sys.exit(-1)
