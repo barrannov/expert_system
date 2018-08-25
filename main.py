@@ -5,7 +5,11 @@ from src.validation import *
 string_usage = "Usage: python3 main.py file_name"
 
 
-if (len(sys.argv) != 2):
-    error_exit(string_usage)
-read_buffer = read_file(sys.argv[1])
-dicti = validation(read_buffer)
+if __name__ == '__main__':
+
+    # if (len(sys.argv) != 2):
+    #     error_exit(string_usage)
+    # read_buffer = read_file(sys.argv[1])
+    read_buffer = read_file('test/simple')
+    dicti = validation(read_buffer)
+    print('')

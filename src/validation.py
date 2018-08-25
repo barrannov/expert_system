@@ -1,7 +1,8 @@
 import sys
 import re
 
-def     delete_comment(buffer):
+
+def delete_comment(buffer):
     i = 0
     for x in buffer:
         res = x.find("#")
@@ -10,11 +11,13 @@ def     delete_comment(buffer):
         i += 1
     return (buffer)
 
-def     delete_empty_elem(buffer):
+
+def delete_empty_elem(buffer):
     buffer = [x for x in buffer if x]
     return (buffer)
 
-def     delete_space(buffer):
+
+def delete_space(buffer):
     i = 0
     for x in buffer:
         buffer[i] = x.split(" ")
@@ -25,7 +28,8 @@ def     delete_space(buffer):
         i += 1
     return (buffer)
 
-def     check_forbiden_char(buffer):
+
+def check_forbiden_char(buffer):
     for x in buffer:
         for n in x:
             match = re.search(r'[^A-Z()!+|^><=?\']', n)
@@ -33,14 +37,16 @@ def     check_forbiden_char(buffer):
                 print("Unknow symbol")
                 sys.exit(-1)
 
-def     minimal_len(buffer):
+
+def minimal_len(buffer):
     min_len = 3
 
     if len(buffer) < 3:
         print("Too small file")
         sys.exit(-1)
 
-def     count_unknow(buffer):
+
+def count_unknow(buffer):
     count = 0
     for x in buffer:
         for n in x:
@@ -48,24 +54,27 @@ def     count_unknow(buffer):
             if (res != -1):
                 count += 1
     if (count != 1):
-        print ("Please one line with ?\nExample:\n?ABC")
+        print("Please one line with ?\nExample:\n?ABC")
         sys.exit(-1)
     if (count == 1):
         res = buffer[len(buffer) - 1][0]
         if (res.find("?")) != 0:
-            print ("wrong position for unknow var")
+            print("wrong position for unknow var")
             sys.exit(-1)
         if (len(res) == 1):
-            print ("all variables known")
+            print("all variables known")
             sys.exit(-1)
 
-def     append_in_dic_conditions(buffer, d):
+
+def append_in_dic_conditions(buffer, d):
     list_a = list()
-    [list_a.append(x) for x in buffer if (x != buffer[len(buffer) - 1]) and (x != buffer[len(buffer) - 2])]
+    [list_a.append(x) for x in buffer if
+     (x != buffer[len(buffer) - 1]) and (x != buffer[len(buffer) - 2])]
     d['conditions'] = list_a
     return (d)
 
-def      init_true_or_false_var(buffer, d):
+
+def init_true_or_false_var(buffer, d):
     tmp_list = list()
     for x in buffer:
         for n in x:
@@ -84,8 +93,9 @@ def      init_true_or_false_var(buffer, d):
     d['vars'] = d_tmp
     return (d)
 
-def     validation(read_buffer):
-    read_buffer = read_buffer.replace("!", " ! ")
+
+def validation(read_buffer):
+    # read_buffer = read_buffer.replace("!", " ! ")
     read_buffer = read_buffer.replace("(", " ( ")
     read_buffer = read_buffer.replace(")", " ) ")
 
@@ -97,7 +107,7 @@ def     validation(read_buffer):
     minimal_len(buffer)
     check_forbiden_char(buffer)
     count_unknow(buffer)
-    d = {"conditions" : [], "vars" : []}
+    d = {"conditions": [], "vars": []}
     d = append_in_dic_conditions(buffer, d)
     d = init_true_or_false_var(buffer, d)
     return d
