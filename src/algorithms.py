@@ -27,70 +27,81 @@ prec["|"] = 3
 prec["<=>"] = 2
 prec["=>"] = 2
 prec["("] = 1
+prec[")"] = 1
 
 
 def _solve_logic(a, b, operator, data):
     all_vars = data['vars']
-    a = not all_vars[a[1]] if '!' in a else a
-    b = not all_vars[b[1]] if '!' in b else b
+
+    if a == 'True' or a == 'False':
+        a = eval(a)
+    elif b == 'True' or b == 'False':
+        b = eval(b)
+    else:
+        a = not all_vars[a[1]] if '!' in a else all_vars[a]
+        b = not all_vars[b[1]] if '!' in b else all_vars[b]
 
     # if a is None or b is None:
     #     return None
 
     if operator == '^':
-        return a != b
+        res = a != b
     elif operator == '+':
-        return a and b
+        res = a and b
     elif operator == '|':
-        return a or b
+        res = a or b
     elif operator == '=>':
-        return not a or b
+        res = not a or b
     elif operator == '<=>':
-        return a == b
+        res = a == b
+    return str(res)
 
-
-def _infixToPostfix(token_list):
-    opStack = Stack()
-    postfixList = []
+def _infix_to_postfix(token_list):
+    op_stack = Stack()
+    postfix_list = []
 
     for token in token_list:
-        if token.isalnum():
-            postfixList.append(token)
+        if token not in prec.keys():
+            postfix_list.append(token)
         elif token == '(':
-            opStack.push(token)
+            op_stack.push(token)
         elif token == ')':
-            topToken = opStack.pop()
-            while topToken != '(':
-                postfixList.append(topToken)
-                topToken = opStack.pop()
+            top_token = op_stack.pop()
+            while top_token != '(':
+                postfix_list.append(top_token)
+                top_token = op_stack.pop()
         else:
-            while (not opStack.isEmpty()) and \
-                    (prec[opStack.peek()] >= prec[token]):
-                postfixList.append(opStack.pop())
-            opStack.push(token)
+            while (not op_stack.isEmpty()) and \
+                    (prec[op_stack.peek()] >= prec[token]):
+                postfix_list.append(op_stack.pop())
+            op_stack.push(token)
 
-    while not opStack.isEmpty():
-        postfixList.append(opStack.pop())
-    # print(postfixList)
-    return postfixList
+    while not op_stack.isEmpty():
+        postfix_list.append(op_stack.pop())
+
+    return postfix_list
 
 
-def _solvePostfix(postfix_list):
+def _solve_postfix(postfix_list, data):
     operand_stack = Stack()
 
     for token in postfix_list:
-        if token.isalnum():
+        if token not in prec.keys():
             operand_stack.push(token)
         else:
             operand2 = operand_stack.pop()
             operand1 = operand_stack.pop()
 
-            # TODO solve conclusion here
-            to_eval = operand1 + token + operand2
-            result = str(eval(to_eval))
+            result = _solve_logic(operand1, operand2, token, data)
+            if result is None:
+                return None
 
             operand_stack.push(result)
-    return operand_stack.pop()
+    final_value = operand_stack.pop()
+    if final_value != 'False' and final_value != 'True':
+        return data['vars'][final_value]
+    else:
+        return final_value
 
 
 # def solve_condition():
@@ -105,4 +116,4 @@ def _solvePostfix(postfix_list):
 # print(infixToPostfix(['A', '|', 'B', '=>', 'C']))
 
 def solve_condition(conditon, data):
-    pass
+    return _solve_postfix(_infix_to_postfix(conditon), data)
