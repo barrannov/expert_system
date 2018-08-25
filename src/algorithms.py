@@ -18,16 +18,7 @@ class Stack:
         return len(self.items)
 
 
-# prec = {}
-#
-# prec["^"] = 4
-# prec["*"] = 3
-# prec["/"] = 3
-# prec["+"] = 2
-# prec["%"] = 2
-# prec["-"] = 2
-# prec["("] = 1
-prec = {}
+prec = dict()
 
 prec["^"] = 3
 prec["!"] = 3
@@ -37,8 +28,26 @@ prec["<=>"] = 2
 prec["=>"] = 2
 prec["("] = 1
 
-def _solve_logic(a, b, operator):
-    pass
+
+def _solve_logic(a, b, operator, data):
+    all_vars = data['vars']
+    a = not all_vars[a[1]] if '!' in a else a
+    b = not all_vars[b[1]] if '!' in b else b
+
+    # if a is None or b is None:
+    #     return None
+
+    if operator == '^':
+        return a != b
+    elif operator == '+':
+        return a and b
+    elif operator == '|':
+        return a or b
+    elif operator == '=>':
+        return not a or b
+    elif operator == '<=>':
+        return a == b
+
 
 def _infixToPostfix(token_list):
     opStack = Stack()
@@ -95,5 +104,5 @@ def _solvePostfix(postfix_list):
 
 # print(infixToPostfix(['A', '|', 'B', '=>', 'C']))
 
-def solve_condition(conditon):
+def solve_condition(conditon, data):
     pass
