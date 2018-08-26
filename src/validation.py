@@ -102,6 +102,8 @@ def     validation_brackets(d):
             print("Error in brackets")
             sys.exit(-1)
 
+
+
 def      init_true_or_false_var(buffer, d):
     tmp_list = list()
     for x in buffer:
@@ -167,9 +169,22 @@ def     validation_operator(d):
             print ("line " + str(y), "error implies or if and only if operator")
             sys.exit(-1)
         y += 1
+    double_char(d)
     print ("valid")
     print (d)
     sys.exit(-1)
+
+def     double_char(d):
+    s = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for x in d['conditions']:
+        for n in x:
+            if (n.isalpha()):
+                res = s.find(n)
+                if (res == -1):
+                    print ("double_char char")
+                    sys.exit(-1)
+                else:
+                    s = s.replace(n, n.lower())
 
 def     validation(read_buffer):
     read_buffer = read_buffer.replace("!", " ! ")

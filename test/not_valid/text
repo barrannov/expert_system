@@ -32,11 +32,17 @@
 
 # A + (A) !A => !A # done
 
-######## valid
-# A + B + !C => C # valid
-# !A => A # valid
+# B + C => C + C # done
 
-A + C ! C => C
+# A + C => C # done
+
+# A + B + !C => C # done 
+
+######## valid
+
+!A => B # valid
+
+################ ###################### don't know
 
 =ABG
 ?GVX
