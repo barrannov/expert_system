@@ -196,28 +196,32 @@ def     validation_operator(d):
 #                     s = s.replace(n, n.lower())
 
 def     validation(read_buffer):
-    read_buffer = read_buffer.replace("!", " ! ")
-    read_buffer = read_buffer.replace("(", " ( ")
-    read_buffer = read_buffer.replace(")", " ) ")
+    try:
+        read_buffer = read_buffer.replace("!", " ! ")
+        read_buffer = read_buffer.replace("(", " ( ")
+        read_buffer = read_buffer.replace(")", " ) ")
 
-    buffer = read_buffer.split('\n')
-    buffer = delete_comment(buffer)
-    buffer = delete_space(buffer)
-    buffer = delete_empty_elem(buffer)
+        buffer = read_buffer.split('\n')
+        buffer = delete_comment(buffer)
+        buffer = delete_space(buffer)
+        buffer = delete_empty_elem(buffer)
 
-    minimal_len(buffer)
-    check_forbiden_char(buffer)
-    count_unknow(buffer)
-    d = {"conditions" : [], "vars" : []}
-    d = append_in_dic_conditions(buffer, d)
-    d = init_true_or_false_var(buffer, d)
-    validation_only_one_implies(d)
-    validation_only_one_if_and_only_if(d)
-    validation_brackets(d)
-    validation_operator(d)
+        minimal_len(buffer)
+        check_forbiden_char(buffer)
+        count_unknow(buffer)
+        d = {"conditions" : [], "vars" : []}
+        d = append_in_dic_conditions(buffer, d)
+        d = init_true_or_false_var(buffer, d)
+        validation_only_one_implies(d)
+        validation_only_one_if_and_only_if(d)
+        validation_brackets(d)
+        validation_operator(d)
 
-    print (d)
-    for x in d['conditions']:
-        print (x)
-    sys.exit(-1)
-    return d
+        print (d)
+        for x in d['conditions']:
+            print (x)
+        sys.exit(-1)
+        return d
+    except:
+        print ("Error")
+        sys.exit(-1)
