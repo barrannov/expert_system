@@ -58,6 +58,10 @@ def     count_unknow(buffer):
         if (len(res) == 1):
             print ("all variables known")
             sys.exit(-1)
+    res = buffer[len(buffer) - 2]
+    if (len(res) != 1):
+        print ("wrong position for known var")
+        sys.exit(-1)
 
 def     append_in_dic_conditions(buffer, d):
     list_a = list()
@@ -123,8 +127,8 @@ def      init_true_or_false_var(buffer, d):
     d['vars'] = d_tmp
     return (d)
 
-def     error(y, x):
-    print("line " + str(y), "error in", x)
+def     error(y, x, n):
+    print("line " + str(y), "error in", x, "number ", n)
     sys.exit(-1)
 
 def     validation_operator(d):
@@ -132,6 +136,7 @@ def     validation_operator(d):
     for x in d['conditions']:
         old = '0'
         now = '0'
+        # oldt = '0'
         j = 0
         e = 0
         for n in x:
@@ -144,23 +149,27 @@ def     validation_operator(d):
                 e += 1
             else:
                 now = n
+            
             if ((len(n) == 2 and n != ("=>")) or (len(n) == 3 and n != "<=>")):
-                error(y, x)
-            if ((now == "v" and old == "v") or (now == "o" and old == "o" and n != "!")):
-                error(y, x)
-            elif now == "o" and (old == "(" or old == "0" and n != "!"):
-                error(y, x)
+                error(y, x, 1)
+            elif ((now == "v" and old == "v") or (now == "o" and old == "o" and n != "!")):
+                error(y, x, 2)
+            elif now == "o" and ((old == "(" or old == "0") and n != "!"):
+                error(y, x, 3)
             elif (now == 'v' and old == ")"):
-                error(y, x)
+                error(y, x, 4)
             elif now == ")" and old == "(":
-                error(y, x)
+                error(y, x, 5)
             elif (now == ")" and (old == "o" or old == '0')):
-                error(y, x)
+                error(y, x, 6)
             elif (now == "e" and (old == "o" or old == "0")):
-                error(y, x)
+                error(y, x, 7)
             elif (n == "!" and ((old == "v" or old == ")") and old != "0")): # !A => A
-                error(y, x)
+                error(y, x, 8)
+            # elif (now == "(" and oldt == "!"):
+            #     error(y, x, 9)
             old = now
+            # oldt = n
             j += 1
             if (j == len(x)) and (now != "v" and now != ")"):
                 print ("line " + str(y), 'error end in', x)
@@ -169,22 +178,22 @@ def     validation_operator(d):
             print ("line " + str(y), "error implies or if and only if operator")
             sys.exit(-1)
         y += 1
-    double_char(d)
+    # double_char(d)
     print ("valid")
     print (d)
     sys.exit(-1)
 
-def     double_char(d):
-    s = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    for x in d['conditions']:
-        for n in x:
-            if (n.isalpha()):
-                res = s.find(n)
-                if (res == -1):
-                    print ("double_char char")
-                    sys.exit(-1)
-                else:
-                    s = s.replace(n, n.lower())
+# def     double_char(d):
+#     for x in d['conditions']:
+#         s = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#         for n in x:
+#             if (n.isalpha()):
+#                 res = s.find(n)
+#                 if (res == -1):
+#                     print ("double_char char")
+#                     sys.exit(-1)
+#                 else:
+#                     s = s.replace(n, n.lower())
 
 def     validation(read_buffer):
     read_buffer = read_buffer.replace("!", " ! ")

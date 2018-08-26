@@ -38,13 +38,18 @@
 
 # A + B + !C => C # done 
 
+# !((A)) => B # done
+
+# A + ) ( => F
+
 ######## valid
 
-!A => B # valid
+((B)) => C + A
 
-################ ###################### don't know
+D + (A + B) => !C
 
-=ABG
+D + A + B + C => F
+=
 ?GVX
 
 # A_((A))
