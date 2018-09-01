@@ -30,8 +30,7 @@ prec["("] = 1
 prec[")"] = 1
 
 
-def _solve_logic(a, b, operator, data):
-    all_vars = data['vars']
+def _solve_logic(a, b, operator, all_vars):
 
     if a == 'True' or a == 'False':
         a = eval(a)
@@ -83,7 +82,7 @@ def _infix_to_postfix(token_list):
     return postfix_list
 
 
-def _solve_postfix(postfix_list, data):
+def _solve_postfix(postfix_list, all_vars):
     operand_stack = Stack()
 
     for token in postfix_list:
@@ -99,17 +98,17 @@ def _solve_postfix(postfix_list, data):
             if operand2 is None:
                 return operand2
 
-            result = _solve_logic(operand1, operand2, token, data)
+            result = _solve_logic(operand1, operand2, token, all_vars)
             # if result is None:
             #     return None
 
             operand_stack.push(result)
     final_value = operand_stack.pop()
     if final_value != 'False' and final_value != 'True':
-        return data['vars'][final_value]
+        return all_vars[final_value]
     else:
         return final_value
 
 
-def solve_condition(conditon, data):
-    return _solve_postfix(_infix_to_postfix(conditon), data)
+def solve_condition(conditon, all_vars):
+    return _solve_postfix(_infix_to_postfix(conditon), all_vars)
