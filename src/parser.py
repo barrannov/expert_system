@@ -56,6 +56,7 @@ def _solve_logic(a, b, operator, data):
         res = a == b
     return str(res)
 
+
 def _infix_to_postfix(token_list):
     op_stack = Stack()
     postfix_list = []
@@ -92,9 +93,15 @@ def _solve_postfix(postfix_list, data):
             operand2 = operand_stack.pop()
             operand1 = operand_stack.pop()
 
+            if operand1 is None:
+                return operand1
+
+            if operand2 is None:
+                return operand2
+
             result = _solve_logic(operand1, operand2, token, data)
-            if result is None:
-                return None
+            # if result is None:
+            #     return None
 
             operand_stack.push(result)
     final_value = operand_stack.pop()
@@ -103,17 +110,6 @@ def _solve_postfix(postfix_list, data):
     else:
         return final_value
 
-
-# def solve_condition():
-#     try:
-#         return solvePostfix(infixToPostfix(['-3']))
-#     except(ZeroDivisionError):
-#         print('You cannot divide by zero')
-#
-# solve_condition()
-
-
-# print(infixToPostfix(['A', '|', 'B', '=>', 'C']))
 
 def solve_condition(conditon, data):
     return _solve_postfix(_infix_to_postfix(conditon), data)
