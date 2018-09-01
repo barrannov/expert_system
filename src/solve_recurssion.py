@@ -1,5 +1,6 @@
 from src.parser import solve_condition
 
+
 def _prepare_conditions(conditions):
     new_conditions = []
 
@@ -15,16 +16,24 @@ def _prepare_conditions(conditions):
         })
     return new_conditions
 
+all_data = []
 
 def solve(data):
-    data['conditions'] = _prepare_conditions(data['conditions'])
-    start_solving(data)
-
-all_data = []
-def start_solving(data, vertical_graph=None, var_index=0):
     global all_data
 
+    data['conditions'] = _prepare_conditions(data['conditions'])
     all_data = data
+    recurssion_solve(get_unknow(all_data))
+
+
+# stores information about all solved variables, conditions and everything
+# what is needed
+
+# def start_solving(data, vertical_graph=None, var_index=0):
+#     global all_data
+#
+#     all_data = data
+#     recurssion_solve(get_unknow(all_data))
     # all_unknown_vars = [v for v in data['vars'] if data['vars'][v] is None]
     # all_known_vars = [v for v in data['vars'] if v is not None]
     # if vertical_graph is None:
@@ -64,6 +73,6 @@ def recurssion_solve(unknown):
         value = resolve_right_part(res_left_part, right_part)
         write_to_data(var_name=unknown, value=value)
         if all_known():
-            return
+            return all_data
     right_unknown = get_unknown_from_condition(condition, exept=unknown)
     recurssion_solve(right_unknown)
