@@ -126,7 +126,7 @@ def _all_conditions_were_visited():
 
 def _set_obvious_right_part(res_left_part,sep , right_part):
     variables = [
-        token['var'] for token in right_part if token['var'] in all_data['vars']
+        token for token in right_part if isinstance(token, dict) and token['var'] in all_data['vars']
     ]
     operators = [
         token for token in right_part if token not in all_data['operators']
@@ -143,7 +143,7 @@ def _set_obvious_right_part(res_left_part,sep , right_part):
             return right_part
 
         for v in variables:
-            all_data['vars'][v] = True if true_option_solve else False
+            all_data['vars'][v['var']] = True if true_option_solve else False
 
     return right_part
 
@@ -152,8 +152,8 @@ def recursion_solve(unknown):
     condition = _get_condition_with_unknown(
         unknown, exept_conds=all_data['visited_conds'][unknown['var']]
     )
-    left_part = condition['left_part']
-    right_part = condition['right_part']
+    left_part = list(condition['left_part'])
+    right_part = list(condition['right_part'])
     left_unknown = _unknown_exists(left_part)
     if left_unknown:
         all_data['visited_conds'][unknown['var']].append(condition)
