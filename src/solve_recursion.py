@@ -99,9 +99,11 @@ def _resolve_right_part(unknown, res_left_part, sep, right_part):
     right_true = list(right_part)
     right_false = list(right_part)
     for i, token in enumerate(right_true):
+        if token in all_data['operators']:
+            continue
         if token['var'] == unknown['var']:
             right_true[i] = {'var': 'True', 'neg': token['neg']}
-            right_false[i] = {'var': 'True', 'neg': token['neg']}
+            right_false[i] = {'var': 'False', 'neg': token['neg']}
 
     true_option = [res_left_part] + [sep] + right_true
     false_option = [res_left_part] + [sep] + right_false
@@ -129,13 +131,13 @@ def _set_obvious_right_part(res_left_part,sep , right_part):
         token for token in right_part if isinstance(token, dict) and token['var'] in all_data['vars']
     ]
     operators = [
-        token for token in right_part if token not in all_data['operators']
+        token for token in right_part if token in all_data['operators']
     ]
     if all(o == '+' for o in operators):
-        right_true = 'True'
-        right_false = 'False'
+        right_true = {'var': 'True', 'neg': False}
+        right_false = {'var': 'False', 'neg': False}
 
-        true_option = [res_left_part] + [sep] + [right_true]
+        true_option = [res_left_part] + [sep] + [right_true, ]
         false_option = [res_left_part] + [sep] + [right_false]
         true_option_solve = solve_condition(true_option, all_data['vars'])
         false_option_solve = solve_condition(false_option, all_data['vars'])

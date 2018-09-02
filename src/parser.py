@@ -114,6 +114,8 @@ def _prepare_condition(condition):
     for i, token in enumerate(condition):
         if token in list(prec):
             continue
+        if isinstance(token, str):
+            print('')
         condition[i] = (
             '!' if token['neg'] else ''
         ) + token['var']
