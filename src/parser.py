@@ -110,5 +110,16 @@ def _solve_postfix(postfix_list, all_vars):
         return final_value
 
 
-def solve_condition(conditon, all_vars):
-    return _solve_postfix(_infix_to_postfix(conditon), all_vars)
+def _prepare_condition(condition):
+    for i, token in enumerate(condition):
+        if token in list(prec):
+            continue
+        condition[i] = (
+            '!' if token['neg'] else ''
+        ) + token['var']
+    return condition
+
+
+def solve_condition(condition, all_vars):
+    condition = _prepare_condition(condition)
+    return _solve_postfix(_infix_to_postfix(condition), all_vars)

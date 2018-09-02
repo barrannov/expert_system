@@ -17,6 +17,7 @@ if __name__ == '__main__':
     # dicti['conditions'] = _prepare_conditions(dicti['conditions'])
     # for cond in dicti['conditions']:
     solve(dicti)
+    print('')
     # logic_exp = 'True => True'.split()
     # res = solve_condition(conditon=logic_exp, data=dicti)
     # print(res)
