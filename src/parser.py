@@ -124,4 +124,4 @@ def _prepare_condition(condition):
 
 def solve_condition(condition, all_vars):
     solve_condition = _prepare_condition(condition)
-    return _solve_postfix(_infix_to_postfix(solve_condition), all_vars)
+    return str(_solve_postfix(_infix_to_postfix(solve_condition), all_vars))

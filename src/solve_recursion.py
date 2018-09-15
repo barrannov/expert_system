@@ -53,8 +53,7 @@ def _get_unknown():
     global all_data
     for var_name, value in all_data['vars'].items():
         if value is None:
-            return var_name
-    return None
+            return {'var':var_name, 'neg':False}
 
 
 def _get_first_unknown_cond():
@@ -76,7 +75,6 @@ def solve(data):
     all_data = data
     unknown = _get_first_unknown_cond()
     recursion_solve(unknown)
-
 
 def _unknown_exists(cond_part, except_fact=None):
     global all_data
@@ -115,7 +113,7 @@ def _resolve_right_part(unknown, res_left_part, sep, right_part):
 
 
 def _all_vars_known():
-    return all(var is not None for var in all_data['vars'])
+    return all(var is not None for var in all_data['vars'].values())
 
 
 def _all_conditions_were_visited():
@@ -158,14 +156,12 @@ def recursion_solve(unknown):
     right_part = list(condition['right_part'])
     left_unknown = _unknown_exists(left_part)
     if left_unknown:
-        all_data['visited_conds'][unknown['var']].append(condition)
         recursion_solve(left_unknown)
     res_left_part = _solve_left_part(left_part)
 
     right_part = _set_obvious_right_part(res_left_part, condition['sep'], right_part)
     right_unknown = _unknown_exists(right_part, except_fact=unknown['var'])
     if right_unknown:
-        all_data['visited_conds'][unknown['var']].append(condition)
         recursion_solve(right_unknown)
     else:
         value = _resolve_right_part(
@@ -173,8 +169,13 @@ def recursion_solve(unknown):
         )
         if value is None:
             # both True and False values are possible
+            all_data['visited_conds'][unknown['var']].append(condition)
             pass
-        all_data['vars'][unknown['var']] = value
-        if _all_vars_known() or _all_conditions_were_visited():
+        else:
+            all_data['vars'][unknown['var']] = value
+        if _all_vars_known():
             return all_data
     recursion_solve(_get_unknown())
+
+
+
