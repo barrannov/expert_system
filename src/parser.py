@@ -30,15 +30,12 @@ prec["("] = 1
 prec[")"] = 1
 
 
-def _solve_logic(a, b, operator, all_vars):
+def _solve_logic(a, b, operator):
 
     if a == 'True' or a == 'False':
         a = eval(a)
     elif b == 'True' or b == 'False':
         b = eval(b)
-    else:
-        a = not all_vars[a[1]] if '!' in a else all_vars[a]
-        b = not all_vars[b[1]] if '!' in b else all_vars[b]
 
     # if a is None or b is None:
     #     return None
@@ -82,7 +79,7 @@ def _infix_to_postfix(token_list):
     return postfix_list
 
 
-def _solve_postfix(postfix_list, all_vars):
+def _solve_postfix(postfix_list):
     operand_stack = Stack()
 
     for token in postfix_list:
@@ -98,16 +95,13 @@ def _solve_postfix(postfix_list, all_vars):
             if operand2 is None:
                 return operand2
 
-            result = _solve_logic(operand1, operand2, token, all_vars)
+            result = _solve_logic(operand1, operand2, token)
             # if result is None:
             #     return None
 
             operand_stack.push(result)
     final_value = operand_stack.pop()
-    if final_value != 'False' and final_value != 'True':
-        return all_vars[final_value]
-    else:
-        return final_value
+    return final_value
 
 
 def _prepare_condition(condition):
@@ -122,6 +116,5 @@ def _prepare_condition(condition):
     return condition
 
 
-def solve_condition(condition, all_vars):
-    solve_condition = _prepare_condition(condition)
-    return str(_solve_postfix(_infix_to_postfix(solve_condition), all_vars))
+def solve_condition(condition):
+    return str(_solve_postfix(_infix_to_postfix(condition)))
