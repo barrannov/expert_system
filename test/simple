@@ -1,22 +1,7 @@
-#C => E
-#A + B + C => D
-#A | B => C
-#A + !B => F
-#C | !G => H
-#V ^ W => X
-#A + B => Y + Z
-#C | D => X | V
-#E + F => !V
-#A + B <=> C
-#A + B <=> !C
-#=ABG
-#?GVX
+B + C => A
+D | E => B
+B => C
 
-A | B => C + D      # True, True
-E + F => G + H      # False, False
-I | J => K + !L     # True, False
-M | N => !O + P     # False, True
-Q | R => !S + !T    # False, False
+=DE
 
-=AJNR
-?CDGHKLOPST
+?A

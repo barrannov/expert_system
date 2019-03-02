@@ -13,7 +13,7 @@ if __name__ == '__main__':
     # if (len(sys.argv) != 2):
     #     error_exit(string_usage)
     # read_buffer = read_file(sys.argv[1])
-    read_buffer = read_file('test/my_test')
+    read_buffer = read_file('test/simple')
     dicti = validation(read_buffer)
     # dicti['conditions'] = _prepare_conditions(dicti['conditions'])
     # for cond in dicti['conditions']:
