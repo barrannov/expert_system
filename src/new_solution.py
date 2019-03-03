@@ -17,16 +17,28 @@ undetermined_facts = list()
 
 separator = "=>"
 
+TRUE = 'True'
+FALSE = 'False'
+
 
 def _initialize(initial_values):
     global rules
     global facts
+    global unknown_facts
+    global determined_facts
+    global undetermined_facts
+
+    unknown_facts = list()
+    determined_facts = list()
+    undetermined_facts = list()
+    rules = list()
+    facts = dict()
 
     rules = initial_values['conditions']
     for name, value in initial_values['vars'].items():
         if value is None:
             unknown_facts.append(name)
-            facts[name] = 'False'
+            facts[name] = FALSE
         else:
             facts[name] = value
             if value is True:
@@ -117,16 +129,16 @@ def _count_unknown_fact(rule, unknown_fact):
     first_condition = _convert_rule_into_condition(first_part)
     first_value = solve_condition(first_condition)
 
-    for b in ('False', 'True'):
+    for b in (FALSE, TRUE):
         second_condition = _convert_rule_into_condition(second_part, unknown_fact, b)
         second_value = solve_condition(second_condition)
 
         if second_value == first_value:
-            if _only_add_in_rule(second_part) and first_value == 'True':
+            if _only_add_in_rule(second_part) and first_value == TRUE:
                 for token in second_part:
                     if token in facts and token is not unknown_fact:
                         determined_facts.append(token)
-                        facts[token] = 'True'
+                        facts[token] = TRUE
             return b
 
 
@@ -136,7 +148,7 @@ def _find_with_recursion(unknown_fact, checked_rules=None):
 
     rule = _get_new_rule(unknown_fact, checked_rules)
     if not rule:
-        return 'False'
+        return FALSE
 
     checked_rules.append(rule)
 
