@@ -61,7 +61,7 @@ def start_solution(initial_values: dict):
                 determined_facts.append(u_fact)
                 facts[u_fact] = fact_value
 
-    return facts, unknown_facts
+    return facts
 
 
 def _get_new_rule(unknown_fact: str, checked_rules: list) -> tuple:

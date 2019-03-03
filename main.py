@@ -12,6 +12,6 @@ if __name__ == '__main__':
     # read_buffer = read_file(sys.argv[1])
     read_buffer = read_file('test/my_test')
     dicti = validation(read_buffer)
-    facts, unknown_facts = start_solution(dicti)
-    for fact in unknown_facts:
+    facts = start_solution(dicti)
+    for fact in dicti['unknown_vars']:
         print(f'{fact} : {facts.get(fact)}')

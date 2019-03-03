@@ -133,6 +133,7 @@ def      init_true_or_false_var(buffer, d):
     for x in x_true:
         d_tmp[x] = True
     d['vars'] = d_tmp
+    d['unknown_vars'] = [x for x in x_none]
     return (d)
 
 def     error(y, x, n):

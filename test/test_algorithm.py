@@ -18,8 +18,8 @@ def test_algorithm_00001():
         'P': 'True',
 
     }
-    facts, unknown_facts = start_solution(parsed_data)
-    assert expected_result == {fact: facts.get(fact) for fact in unknown_facts}
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
 def test_algorithm_00002():
@@ -30,8 +30,8 @@ def test_algorithm_00002():
         'A': 'False',
 
     }
-    facts, unknown_facts = start_solution(parsed_data)
-    assert expected_result == {fact: facts.get(fact) for fact in unknown_facts}
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
 def test_algorithm_00003():
@@ -41,8 +41,8 @@ def test_algorithm_00003():
     expected_result = {
         'A': 'False',
     }
-    facts, unknown_facts = start_solution(parsed_data)
-    assert expected_result == {fact: facts.get(fact) for fact in unknown_facts}
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
 def test_algorithm_00004():
@@ -52,8 +52,8 @@ def test_algorithm_00004():
     expected_result = {
         'A': 'True',
     }
-    facts, unknown_facts = start_solution(parsed_data)
-    assert expected_result == {fact: facts.get(fact) for fact in unknown_facts}
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
 def test_algorithm_00005():
@@ -63,8 +63,8 @@ def test_algorithm_00005():
     expected_result = {
         'A': 'True',
     }
-    facts, unknown_facts = start_solution(parsed_data)
-    assert expected_result == {fact: facts.get(fact) for fact in unknown_facts}
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
 def test_algorithm_00006():
@@ -74,8 +74,8 @@ def test_algorithm_00006():
     expected_result = {
         'E': 'False',
     }
-    facts, unknown_facts = start_solution(parsed_data)
-    assert expected_result == {fact: facts.get(fact) for fact in unknown_facts}
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
 def test_algorithm_00007():
@@ -87,8 +87,8 @@ def test_algorithm_00007():
         'D': 'True',
         'F': 'False',
     }
-    facts, unknown_facts = start_solution(parsed_data)
-    assert expected_result == {fact: facts.get(fact) for fact in unknown_facts}
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
 def test_algorithm_00008():
@@ -101,8 +101,8 @@ def test_algorithm_00008():
         'I': 'False',
         'J': 'False',
     }
-    facts, unknown_facts = start_solution(parsed_data)
-    assert expected_result == {fact: facts.get(fact) for fact in unknown_facts}
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
 def test_algorithm_00009():
@@ -115,8 +115,8 @@ def test_algorithm_00009():
         'I': 'True',
         'L': 'False',
     }
-    facts, unknown_facts = start_solution(parsed_data)
-    assert expected_result == {fact: facts.get(fact) for fact in unknown_facts}
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
 def test_algorithm_00010():
@@ -129,8 +129,8 @@ def test_algorithm_00010():
         'I': 'True',
         'L': 'False',
     }
-    facts, unknown_facts = start_solution(parsed_data)
-    assert expected_result == {fact: facts.get(fact) for fact in unknown_facts}
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
 def test_algorithm_00011():
@@ -141,8 +141,8 @@ def test_algorithm_00011():
         'D': 'True',
         'I': 'True',
     }
-    facts, unknown_facts = start_solution(parsed_data)
-    assert expected_result == {fact: facts.get(fact) for fact in unknown_facts}
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
 def test_algorithm_00012():
@@ -153,8 +153,8 @@ def test_algorithm_00012():
         'C': 'True',
         'A': 'True',
     }
-    facts, unknown_facts = start_solution(parsed_data)
-    assert expected_result == {fact: facts.get(fact) for fact in unknown_facts}
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
 def test_algorithm_00013():
@@ -166,8 +166,8 @@ def test_algorithm_00013():
         'E': 'False',
         'C': 'True',
     }
-    facts, unknown_facts = start_solution(parsed_data)
-    assert expected_result == {fact: facts.get(fact) for fact in unknown_facts}
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
 def test_algorithm_00014():
@@ -189,8 +189,8 @@ def test_algorithm_00014():
         'Y': 'False',
         'Z': 'False'
     }
-    facts, unknown_facts = start_solution(parsed_data)
-    assert expected_result == {fact: facts.get(fact) for fact in unknown_facts}
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
 if __name__ == '__main__':
