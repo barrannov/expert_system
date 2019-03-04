@@ -61,7 +61,7 @@ def test_algorithm_00005():
     parsed_data = validation(read_buffer)
 
     expected_result = {
-        'A': 'True',
+        'A': 'False',
     }
     facts = start_solution(parsed_data)
     assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
@@ -99,7 +99,7 @@ def test_algorithm_00008():
         'C': 'True',
         'F': 'False',
         'I': 'False',
-        'J': 'False',
+        'L': 'False',
     }
     facts = start_solution(parsed_data)
     assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}

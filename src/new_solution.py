@@ -1,13 +1,11 @@
-from typing import Dict, Tuple, List
-from src.parser import solve_condition
+from src.parser import solve_expression
 
-
-rules = list()
+rules = tuple()
 
 facts = dict()
 
 # list of initially unknown facts
-unknown_facts = list()
+unknown_facts = tuple()
 
 # determined facts are appended to this list
 determined_facts = list()
@@ -15,10 +13,15 @@ determined_facts = list()
 # facts which are impossible to terminate
 undetermined_facts = list()
 
+# visited rules for facts
+visited_rules = dict()
+
 separator = "=>"
 
 TRUE = 'True'
 FALSE = 'False'
+
+OPERATORS = ('+', '!', '^', '(', ')', '|', '=>', '<=>')
 
 
 def _initialize(initial_values):
@@ -41,14 +44,23 @@ def _initialize(initial_values):
             facts[name] = FALSE
         else:
             facts[name] = value
-            if value is True:
+            if value == 'True':
                 determined_facts.append(name)
 
+    for rule_i, rule in enumerate(rules):
+        split_index = rule.index('=>')
+        conclusion = rule[split_index + 1:]
+
+        for token in conclusion:
+            if not token in OPERATORS:
+                if token not in visited_rules:
+                    visited_rules[token] = {}
+                visited_rules[token].update({rule_i: False})
+                # rule index; visited or not
 
 def start_solution(initial_values: dict):
 
     _initialize(initial_values)
-    # TODO go in a correct order
 
     for u_fact in unknown_facts:
         if facts[u_fact] not in determined_facts:
@@ -65,12 +77,15 @@ def start_solution(initial_values: dict):
 
 
 def _get_new_rule(unknown_fact: str, checked_rules: list) -> tuple:
-    # TODO return rule for finding value of fact
-    #   if there are no rules with unknown_fact in second part of rule
-    #   try to find with rule with fact in first part, else return empty tuple
 
-    for rule in rules:
+    for rule_i, rule in enumerate(rules):
         if unknown_fact in rule and rule not in checked_rules:
+            if unknown_fact in visited_rules:
+                if rule_i in visited_rules[unknown_fact] and \
+                        visited_rules[unknown_fact][rule_i] is True:
+                    continue
+                visited_rules[unknown_fact][rule_i] = True
+
             first_part = rule[:rule.index(separator)]
             if unknown_fact in first_part:
                 continue
@@ -78,13 +93,23 @@ def _get_new_rule(unknown_fact: str, checked_rules: list) -> tuple:
                 return rule
 
 
-def _get_unknown_fact_from_rule(current_rule, current_unkown_fact) -> str:
-    # TODO find unknow fact which doesn't allow us to find value of
-    #   current_unknow fact
+def _get_unknown_fact_from_rule(current_rule, current_unkown_fact):
 
     split_index = current_rule.index('=>')
-    first_part = current_rule[:split_index]
-    second_part = current_rule[split_index + 1:]
+    condition = current_rule[:split_index]
+    conclusion = current_rule[split_index + 1:]
+
+    # check possible solution
+    if current_unkown_fact not in condition:
+        condition_exp = _convert_rule_into_expression(condition)
+        condition_res = solve_expression(condition_exp, condition=True)
+        if condition_res:
+            for b in ('True', 'False'):
+                conclusion_exp = _convert_rule_into_expression(
+                    conclusion, unkown_fact=current_unkown_fact, possible_value=b)
+                conclusion_res = solve_expression(conclusion_exp, conclusion=True)
+                if conclusion_res in ('True', 'False'):
+                    return None
 
     for fact in current_rule:
         if (fact not in determined_facts) \
@@ -94,17 +119,20 @@ def _get_unknown_fact_from_rule(current_rule, current_unkown_fact) -> str:
             return fact
 
 
-def _convert_rule_into_condition(rule, unkown_fact=None, possible_value=None):
+def _convert_rule_into_expression(rule, unkown_fact=None, possible_value=None):
     final_condition = []
 
     for token in rule:
-        if unkown_fact and possible_value:
-            if token == unkown_fact:
-                final_condition.append(possible_value)
-            else:
-                final_condition.append(facts.get(token))
-        else:
+        if unkown_fact and token == unkown_fact:
+            final_condition.append(possible_value)
+        elif token in determined_facts:
             final_condition.append(facts.get(token))
+        elif token in OPERATORS:
+            final_condition.append(token)
+        elif token == TRUE or token == FALSE:
+            final_condition.append(token)
+        else:
+            final_condition.append(None)
 
     return final_condition
 
@@ -119,53 +147,67 @@ def _only_add_in_rule(rule):
 
 
 def _count_unknown_fact(rule, unknown_fact):
+    if not rule:
+        return FALSE
+
     split_index = rule.index('=>')
-    first_part = rule[:split_index]
-    second_part = rule[split_index + 1:]
+    condition = rule[:split_index]
+    conclusion = rule[split_index + 1:]
 
-    if unknown_fact in first_part:
-        first_part, second_part = second_part, first_part
-
-    first_condition = _convert_rule_into_condition(first_part)
-    first_value = solve_condition(first_condition)
+    first_condition = _convert_rule_into_expression(condition)
+    first_value = solve_expression(first_condition, condition=True)
 
     for b in (FALSE, TRUE):
-        second_condition = _convert_rule_into_condition(second_part, unknown_fact, b)
-        second_value = solve_condition(second_condition)
+        second_condition = _convert_rule_into_expression(conclusion, unknown_fact, b)
+        second_value = solve_expression(second_condition, conclusion=True)
 
         if second_value == first_value:
-            if _only_add_in_rule(second_part) and first_value == TRUE:
-                for token in second_part:
+            if _only_add_in_rule(conclusion) and first_value == TRUE:
+                for token in conclusion:
                     if token in facts and token is not unknown_fact:
                         determined_facts.append(token)
                         facts[token] = TRUE
             return b
 
 
-def _find_with_recursion(unknown_fact, checked_rules=None):
+def _unvisited_rules_exists(fact):
+    visited_fact_rules = visited_rules.get(fact)
+    if not visited_fact_rules:
+        return False
+    if False in visited_fact_rules.values():
+        return True
+    return False
+
+
+def _find_with_recursion(unknown_fact, checked_rules=None, escape_false=False):
     if checked_rules is None:
         checked_rules = []
 
     rule = _get_new_rule(unknown_fact, checked_rules)
-    if not rule:
-        return FALSE
 
-    checked_rules.append(rule)
+    if rule:
+        checked_rules.append(rule)
 
-    unknown_value_exists = True
-    while unknown_value_exists:
-        unknown_fact_in_rule = _get_unknown_fact_from_rule(rule, unknown_fact)
-        if unknown_fact_in_rule is not None:
-            # TODO save found value directly into dict and everywhere
-            found_value = _find_with_recursion(unknown_fact_in_rule, checked_rules)
-            if found_value is None:
-                undetermined_facts.append(
-                    unknown_fact_in_rule
-                )
+        unknown_value_exists = True
+        while unknown_value_exists:
+            unknown_fact_in_rule = _get_unknown_fact_from_rule(rule, unknown_fact)
+            if unknown_fact_in_rule is not None:
+                found_value = _find_with_recursion(unknown_fact_in_rule, checked_rules)
+                if found_value is None:
+                    undetermined_facts.append(unknown_fact_in_rule)
+                else:
+                    determined_facts.append(unknown_fact_in_rule)
+                    facts[unknown_fact_in_rule] = found_value
             else:
-                determined_facts.append(unknown_fact_in_rule)
-                facts[unknown_fact_in_rule] = found_value
-        else:
-            unknown_value_exists = False
+                unknown_value_exists = False
 
-    return _count_unknown_fact(rule, unknown_fact)
+    fact_value = _count_unknown_fact(rule, unknown_fact)
+    if fact_value == 'False':
+        if escape_false:
+            return 'False'
+        while _unvisited_rules_exists(unknown_fact):
+            new_fact_value = _find_with_recursion(unknown_fact, escape_false=True)
+            if new_fact_value != fact_value:
+                fact_value = new_fact_value
+
+    return fact_value

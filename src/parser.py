@@ -31,10 +31,13 @@ prec[")"] = 1
 
 
 def _solve_logic(a, b, operator):
+    if not a or not b:
+        return None
 
     if a == 'True' or a == 'False':
         a = eval(a)
-    elif b == 'True' or b == 'False':
+
+    if b == 'True' or b == 'False':
         b = eval(b)
 
     # if a is None or b is None:
@@ -57,9 +60,15 @@ def _infix_to_postfix(token_list):
     op_stack = Stack()
     postfix_list = []
 
+    neg = False
     for token in token_list:
         if token not in prec.keys():
+            if neg:
+                token = 'False' if token == 'True' else 'True'
             postfix_list.append(token)
+            neg = False
+        elif token == '!':
+            neg = True
         elif token == '(':
             op_stack.push(token)
         elif token == ')':
@@ -79,7 +88,25 @@ def _infix_to_postfix(token_list):
     return postfix_list
 
 
-def _solve_postfix(postfix_list):
+def _validate_condition_operands(a, b, operator):
+    if not a or not b:
+        if operator == '|':
+            if a == 'True' or b == 'True':
+                a = 'True'
+                b = 'True'
+    return a, b
+
+
+def _validate_conclusion_operands(a, b, operator):
+    if not a or not b:
+        if operator == '+':
+            if a == 'True' or b == 'True':
+                a = 'True'
+                b = 'True'
+    return a, b
+
+
+def _solve_postfix(postfix_list, condition=False, conclusion=False):
     operand_stack = Stack()
 
     for token in postfix_list:
@@ -89,32 +116,25 @@ def _solve_postfix(postfix_list):
             operand2 = operand_stack.pop()
             operand1 = operand_stack.pop()
 
-            if operand1 is None:
-                return operand1
-
-            if operand2 is None:
-                return operand2
+            if condition is True:
+                operand1, operand2 = _validate_condition_operands(operand1, operand2, token)
+            elif conclusion is True:
+                operand1, operand2 = _validate_conclusion_operands(operand1, operand2, token)
 
             result = _solve_logic(operand1, operand2, token)
             # if result is None:
             #     return None
 
             operand_stack.push(result)
+            neg = False
     final_value = operand_stack.pop()
     return final_value
 
 
-def _prepare_condition(condition):
-    for i, token in enumerate(condition):
-        if token in list(prec):
-            continue
-        if isinstance(token, str):
-            print('')
-        condition[i] = (
-            '!' if token['neg'] else ''
-        ) + token['var']
-    return condition
 
+def solve_expression(expression, condition=False, conclusion=False):
+    if condition is True and conclusion is True:
+        print('True should be only one condition or conclusion.')
 
-def solve_condition(condition):
-    return str(_solve_postfix(_infix_to_postfix(condition)))
+    exp_res = str(_solve_postfix(_infix_to_postfix(expression), condition, conclusion))
+    return None if exp_res == 'None' else exp_res

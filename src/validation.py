@@ -125,13 +125,13 @@ def      init_true_or_false_var(buffer, d):
     tmp_list = list(set(tmp_list))
     d_tmp = {}
     for x in tmp_list:
-        d_tmp[x] = False
+        d_tmp[x] = 'False'
     x_none = buffer[len(buffer) - 1][0].replace("?", "")
     for x in x_none:
         d_tmp[x] = None
     x_true = buffer[len(buffer) - 2][0].replace("=", "")
     for x in x_true:
-        d_tmp[x] = True
+        d_tmp[x] = 'True'
     d['vars'] = d_tmp
     d['unknown_vars'] = [x for x in x_none]
     return (d)

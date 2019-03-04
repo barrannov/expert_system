@@ -7,5 +7,5 @@ L + M => K
 O + P => L + N
 N => M
 
-=DEIJO
+=DEIJOP
 ?AFKP       # All facts should be true.
