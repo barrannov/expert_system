@@ -24,6 +24,13 @@ FALSE = 'False'
 OPERATORS = ('+', '!', '^', '(', ')', '|', '=>', '<=>')
 
 
+def _save_rule(rule, value):
+    if facts.get(rule) != 'True':
+        if rule not in determined_facts:
+            determined_facts.append(rule)
+            facts[rule] = value
+
+
 def _initialize(initial_values):
     global rules
     global facts
@@ -54,24 +61,19 @@ def _initialize(initial_values):
         for token in conclusion:
             if not token in OPERATORS:
                 if token not in visited_rules:
-                    visited_rules[token] = {}
-                visited_rules[token].update({rule_i: False})
+                    visited_rules[token] = []
+                visited_rules[token].append(rule_i)
                 # rule index; visited or not
 
-def start_solution(initial_values: dict):
 
+def start_solution(initial_values: dict):
     _initialize(initial_values)
 
     for u_fact in unknown_facts:
-        if facts[u_fact] not in determined_facts:
-            fact_value = _find_with_recursion(u_fact)
-            if fact_value is None:
-                undetermined_facts.append(
-                    u_fact
-                )
-            else:
-                determined_facts.append(u_fact)
-                facts[u_fact] = fact_value
+        for rule_i, rule in enumerate(visited_rules[u_fact]):
+            if facts.get(u_fact) != 'True':
+                fact_value = _find_with_recursion(u_fact, rule=rules[rule])
+                _save_rule(u_fact, fact_value)
 
     return facts
 
@@ -80,12 +82,6 @@ def _get_new_rule(unknown_fact: str, checked_rules: list) -> tuple:
 
     for rule_i, rule in enumerate(rules):
         if unknown_fact in rule and rule not in checked_rules:
-            if unknown_fact in visited_rules:
-                if rule_i in visited_rules[unknown_fact] and \
-                        visited_rules[unknown_fact][rule_i] is True:
-                    continue
-                visited_rules[unknown_fact][rule_i] = True
-
             first_part = rule[:rule.index(separator)]
             if unknown_fact in first_part:
                 continue
@@ -165,25 +161,16 @@ def _count_unknown_fact(rule, unknown_fact):
             if _only_add_in_rule(conclusion) and first_value == TRUE:
                 for token in conclusion:
                     if token in facts and token is not unknown_fact:
-                        determined_facts.append(token)
-                        facts[token] = TRUE
+                        _save_rule(token, TRUE)
             return b
 
 
-def _unvisited_rules_exists(fact):
-    visited_fact_rules = visited_rules.get(fact)
-    if not visited_fact_rules:
-        return False
-    if False in visited_fact_rules.values():
-        return True
-    return False
-
-
-def _find_with_recursion(unknown_fact, checked_rules=None, escape_false=False):
+def _find_with_recursion(unknown_fact, rule=None, checked_rules=None):
     if checked_rules is None:
         checked_rules = []
 
-    rule = _get_new_rule(unknown_fact, checked_rules)
+    if not rule:
+        rule = _get_new_rule(unknown_fact, checked_rules)
 
     if rule:
         checked_rules.append(rule)
@@ -192,22 +179,14 @@ def _find_with_recursion(unknown_fact, checked_rules=None, escape_false=False):
         while unknown_value_exists:
             unknown_fact_in_rule = _get_unknown_fact_from_rule(rule, unknown_fact)
             if unknown_fact_in_rule is not None:
-                found_value = _find_with_recursion(unknown_fact_in_rule, checked_rules)
+                found_value = _find_with_recursion(unknown_fact_in_rule, checked_rules=checked_rules)
                 if found_value is None:
                     undetermined_facts.append(unknown_fact_in_rule)
                 else:
-                    determined_facts.append(unknown_fact_in_rule)
-                    facts[unknown_fact_in_rule] = found_value
+                    _save_rule(unknown_fact_in_rule, found_value)
             else:
                 unknown_value_exists = False
 
     fact_value = _count_unknown_fact(rule, unknown_fact)
-    if fact_value == 'False':
-        if escape_false:
-            return 'False'
-        while _unvisited_rules_exists(unknown_fact):
-            new_fact_value = _find_with_recursion(unknown_fact, escape_false=True)
-            if new_fact_value != fact_value:
-                fact_value = new_fact_value
 
     return fact_value
