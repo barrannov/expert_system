@@ -193,5 +193,16 @@ def test_algorithm_00014():
     assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
 
 
+def test_algorithm_00015():
+    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00015.txt')
+    parsed_data = validation(read_buffer)
+
+    expected_result = {
+        'C': 'True'
+    }
+    facts = start_solution(parsed_data)
+    assert expected_result == {fact: facts.get(fact) for fact in parsed_data['unknown_vars']}
+
+
 if __name__ == '__main__':
     pytest.main(['-vv'])

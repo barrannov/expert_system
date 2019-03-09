@@ -25,10 +25,10 @@ OPERATORS = ('+', '!', '^', '(', ')', '|', '=>', '<=>')
 
 
 def _save_rule(rule, value):
-    if facts.get(rule) != 'True':
-        if rule not in determined_facts:
-            determined_facts.append(rule)
-            facts[rule] = value
+    # if facts.get(rule) != 'True':
+    #     if rule not in determined_facts:
+    determined_facts.append(rule)
+    facts[rule] = value
 
 
 def _initialize(initial_values):
@@ -54,15 +54,15 @@ def _initialize(initial_values):
             if value == 'True':
                 determined_facts.append(name)
 
-    for rule_i, rule in enumerate(rules):
-        split_index = rule.index('=>')
-        conclusion = rule[split_index + 1:]
-
-        for token in conclusion:
-            if not token in OPERATORS:
-                if token not in visited_rules:
-                    visited_rules[token] = []
-                visited_rules[token].append(rule_i)
+    # for rule_i, rule in enumerate(rules):
+    #     split_index = rule.index('=>')
+    #     conclusion = rule[split_index + 1:]
+    #
+    #     for token in conclusion:
+    #         if not token in OPERATORS:
+    #             if token not in visited_rules:
+    #                 visited_rules[token] = []
+    #             visited_rules[token].append(rule_i)
                 # rule index; visited or not
 
 
@@ -70,11 +70,20 @@ def start_solution(initial_values: dict):
     _initialize(initial_values)
 
     for u_fact in unknown_facts:
-        for rule_i, rule in enumerate(visited_rules[u_fact]):
-            if facts.get(u_fact) != 'True':
-                fact_value = _find_with_recursion(u_fact, rule=rules[rule])
-                _save_rule(u_fact, fact_value)
+        # for rule_i, rule in enumerate(visited_rules[u_fact]):
+        #     if facts.get(u_fact) != 'True':
+        #         fact_value = _find_with_recursion(u_fact)
+        #         _save_rule(u_fact, fact_value)
 
+        if facts[u_fact] not in determined_facts:
+            fact_value = _find_with_recursion(u_fact)
+            if fact_value is None:
+                undetermined_facts.append(
+                    u_fact
+                )
+            else:
+                determined_facts.append(u_fact)
+                facts[u_fact] = fact_value
     return facts
 
 
