@@ -25,10 +25,10 @@ OPERATORS = ('+', '!', '^', '(', ')', '|', '=>', '<=>')
 
 
 def _save_rule(rule, value):
-    # if facts.get(rule) != 'True':
-    #     if rule not in determined_facts:
-    determined_facts.append(rule)
-    facts[rule] = value
+    if facts.get(rule) != 'True':
+        facts[rule] = value
+        if rule not in determined_facts:
+            determined_facts.append(rule)
 
 
 def _initialize(initial_values):
@@ -37,7 +37,9 @@ def _initialize(initial_values):
     global unknown_facts
     global determined_facts
     global undetermined_facts
+    global visited_rules
 
+    visited_rules = dict()
     unknown_facts = list()
     determined_facts = list()
     undetermined_facts = list()
@@ -54,15 +56,15 @@ def _initialize(initial_values):
             if value == 'True':
                 determined_facts.append(name)
 
-    # for rule_i, rule in enumerate(rules):
-    #     split_index = rule.index('=>')
-    #     conclusion = rule[split_index + 1:]
-    #
-    #     for token in conclusion:
-    #         if not token in OPERATORS:
-    #             if token not in visited_rules:
-    #                 visited_rules[token] = []
-    #             visited_rules[token].append(rule_i)
+    for rule_i, rule in enumerate(rules):
+        split_index = rule.index('=>')
+        conclusion = rule[split_index + 1:]
+
+        for token in conclusion:
+            if not token in OPERATORS:
+                if token not in visited_rules:
+                    visited_rules[token] = []
+                visited_rules[token].append(rule_i)
                 # rule index; visited or not
 
 
@@ -70,20 +72,20 @@ def start_solution(initial_values: dict):
     _initialize(initial_values)
 
     for u_fact in unknown_facts:
-        # for rule_i, rule in enumerate(visited_rules[u_fact]):
-        #     if facts.get(u_fact) != 'True':
-        #         fact_value = _find_with_recursion(u_fact)
-        #         _save_rule(u_fact, fact_value)
-
-        if facts[u_fact] not in determined_facts:
-            fact_value = _find_with_recursion(u_fact)
-            if fact_value is None:
-                undetermined_facts.append(
-                    u_fact
-                )
-            else:
-                determined_facts.append(u_fact)
-                facts[u_fact] = fact_value
+        for rule_i, rule in enumerate(visited_rules[u_fact]):
+            if facts.get(u_fact) != 'True':
+                fact_value = _find_with_recursion(u_fact, rule=rules[rule])
+                _save_rule(u_fact, fact_value)
+        #
+        # if facts[u_fact] not in determined_facts:
+        #     fact_value = _find_with_recursion(u_fact)
+        #     if fact_value is None:
+        #         undetermined_facts.append(
+        #             u_fact
+        #         )
+        #     else:
+        #         determined_facts.append(u_fact)
+        #         facts[u_fact] = fact_value
     return facts
 
 
@@ -116,7 +118,14 @@ def _get_unknown_fact_from_rule(current_rule, current_unkown_fact):
                 if conclusion_res in ('True', 'False'):
                     return None
 
-    for fact in current_rule:
+    for fact in condition:
+        if (fact not in determined_facts) \
+                and (fact is not current_unkown_fact) \
+                and (fact not in undetermined_facts) \
+                and (fact in facts):
+            return fact
+
+    for fact in conclusion:
         if (fact not in determined_facts) \
                 and (fact is not current_unkown_fact) \
                 and (fact not in undetermined_facts) \
@@ -172,6 +181,7 @@ def _count_unknown_fact(rule, unknown_fact):
                     if token in facts and token is not unknown_fact:
                         _save_rule(token, TRUE)
             return b
+    return FALSE
 
 
 def _find_with_recursion(unknown_fact, rule=None, checked_rules=None):
@@ -196,6 +206,4 @@ def _find_with_recursion(unknown_fact, rule=None, checked_rules=None):
             else:
                 unknown_value_exists = False
 
-    fact_value = _count_unknown_fact(rule, unknown_fact)
-
-    return fact_value
+    return _count_unknown_fact(rule, unknown_fact)

@@ -1,7 +1,5 @@
-B + C => A
-D | E => B
-B => C
+T => C
+I => C
 
-=DE
-
-?A
+=I
+?C
