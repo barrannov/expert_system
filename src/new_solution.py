@@ -57,7 +57,11 @@ def _initialize(initial_values):
                 determined_facts.append(name)
 
     for rule_i, rule in enumerate(rules):
-        split_index = rule.index('=>')
+        try:
+            split_index = rule.index('=>')
+        except ValueError:
+            split_index = rule.index('<=>')
+
         conclusion = rule[split_index + 1:]
 
         for token in conclusion:
