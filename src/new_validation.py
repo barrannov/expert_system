@@ -55,16 +55,159 @@ def validate_syntax(buffer):
         raise Exception('Invalid file syntax: wrong position for known vars')
 
 
+def make_dictionary_conditions(buffer):
+    list_vars = {"conditions" : [], "vars" : []}
+
+    list_a = list()
+    [list_a.append(x) for x in buffer if
+     (x != buffer[len(buffer) - 1]) and (x != buffer[len(buffer) - 2])]
+    list_vars['conditions'] = list_a
+
+    return (list_vars)
+
+
+
+def init_bool_vars(buffer, vals):
+    tmp_list = list()
+
+    for x in buffer:
+        for n in x:
+            if (n.isalpha()) == True:
+                tmp_list.append(n)
+
+    tmp_list = list(set(tmp_list))
+    d_tmp = {}
+
+    for x in tmp_list:
+        d_tmp[x] = 'False'
+    x_none = buffer[len(buffer) - 1][0].replace("?", "")
+
+    for x in x_none:
+        d_tmp[x] = None
+    x_true = buffer[len(buffer) - 2][0].replace("=", "")
+
+    for x in x_true:
+        d_tmp[x] = 'True'
+    vals['vars'] = d_tmp
+    vals['unknown_vars'] = [x for x in x_none]
+
+    return (vals)
+
+
+
+def validation_implies(d):
+    for x in d['conditions']:
+        count = 0
+        for n in x:
+            if n == "=>":
+                count += 1
+            if (count > 1):
+                raise Exception('Invalid file syntax: allowed only one implies per 1 line')
+
+
+def validation_if_per_line(d):
+    for x in d['conditions']:
+        count = 0
+        for n in x:
+            if n == "<=>":
+                count += 1
+            if (count > 1):
+                raise Exception('Invalid file syntax: allowed only one "if" per 1 line')
+
+
+def validation_brackets(d):
+    print(d['conditions'])
+    for x in d['conditions']:
+        count = 0
+        for n in x:
+            if (n == "("):
+                count += 1
+            if (n == ")"):
+                count -= 1
+            if (n == "<=>" or n == "=>"):
+                if (count != 0):
+                    raise Exception('Invalid file syntax: Error in brackets')
+                count = 0
+            if (count < 0):
+                    raise Exception('Invalid file syntax: No opening bracket')    
+        if (count != 0):
+            raise Exception('Invalid file syntax: Error in brackets')
+
+
+
+def error(y, x, n):
+    raise Exception("Invalid file syntax: line " + str(y), "error in", x, "number ", n)
+
+
+def validation_operators(d):
+    y = 0
+    for x in d['conditions']:
+        old = '0'
+        now = '0'
+        j = 0
+        e = 0
+        for n in x:
+            if (re.search(r'[A-Z\']', n)):
+                now = 'v'
+            elif (re.search(r'[!+|^\']', n)):
+                now = 'o'
+            elif (re.search(r'[<=>]', n)):
+                now = "e"
+                e += 1
+            else:
+                now = n
+
+            if ((len(n) == 2 and n != ("=>")) or (len(n) == 3 and n != "<=>")):
+                error(y, x, 1)
+            elif ((now == "v" and old == "v") or (now == "o" and old == "o" and n != "!")): # C C => E  |OR|  C <=> <=> E
+                error(y, x, 2)
+            elif now == "o" and ((old == "(" or old == "0") and n != "!"):
+                error(y, x, 3)
+            elif (now == 'v' and old == ")"):
+                error(y, x, 4)
+            elif now == ")" and old == "(":
+                error(y, x, 5)
+            elif (now == ")" and (old == "o" or old == '0')):
+                error(y, x, 6)
+            elif (now == "e" and (old == "o" or old == "0")):
+                error(y, x, 7)
+            elif (n == "!" and ((old == "v" or old == ")") and old != "0")): # !A => A
+                error(y, x, 8)
+            old = now
+            j += 1
+            if (j == len(x)) and (now != "v" and now != ")"):
+                raise Exception("Invalid file syntax: line " + str(y), "error end in ", x)
+        if (e != 1):
+            raise Exception("Invalid file syntax: line " + str(y), "error implies or if and only if operator")
+        y += 1
+
+
+
+
+
 def validation (buffer) :
     if len(buffer) < 5 :
         raise Exception('Empty file')
 
-    separated_buf = buffer.split('\n')
-    separated_buf = delete_comments(separated_buf)
-    separated_buf = delete_spacing(separated_buf)
-    separated_buf = check_invalid_char(separated_buf)
+    buffer = buffer.replace("!", " ! ").replace("(", " ( ").replace(")", " ) ")   
 
-    if len(separated_buf) < 3 :
+    buf = buffer.split('\n')
+    buf = delete_comments(buf)
+    buf = delete_spacing(buf)
+
+    check_invalid_char(buf)
+
+    if len(buf) < 3 :
         raise Exception('Not enough data')
 
-    validate_syntax(separated_buf)
+    validate_syntax(buf)
+
+    vals = make_dictionary_conditions(buf)
+    vals = init_bool_vars(buf, vals)
+    validation_implies(vals)
+    validation_if_per_line(vals)
+    #print(vals)
+    validation_brackets(vals)
+    validation_operators(vals)
+
+    return buf

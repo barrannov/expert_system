@@ -1,0 +1,10 @@
+############ not valid
+
+)A+(A => A
+
+
+D + (A + B) => !C
+
+D + A + B + C => F
+=F
+?GVX

@@ -1,0 +1,9 @@
+############ not valid
+
+C + (A + )B => E
+
+D + (A + B) => !C
+
+D + A + B + C => F
+=F
+?GVX
