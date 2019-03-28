@@ -116,7 +116,7 @@ def validation_if_per_line(d):
 
 
 def validation_brackets(d):
-    print(d['conditions'])
+    # print(d['conditions'])
     for x in d['conditions']:
         count = 0
         for n in x:
