@@ -1,0 +1,9 @@
+A | B + C => E # E is true
+(F | G) + H => E # E is true # assertions
+# assertions
+=A # assertions
+?E# assertions
+# assertions
+
+# assertions
+# =AE

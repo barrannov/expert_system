@@ -1,0 +1,13 @@
+B + C => A # A is true
+D| E => B # B is true
+B => C # C is true
+
+
+#=E# assertions
+=E# assertions
+#=E# assertions
+?A
+
+
+# assertions
+# =EABC

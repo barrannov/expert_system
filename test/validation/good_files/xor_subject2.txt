@@ -1,0 +1,10 @@
+B + C => A # A is true
+D ^ E => B # B is true
+B => C # C is true
+# =DABC
+=D# =DABC# =DABC
+?A
+
+
+# assertions
+# =DABC

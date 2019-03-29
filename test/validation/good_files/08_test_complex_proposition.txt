@@ -1,0 +1,7 @@
+(A ^ B) + C => D + !E
+(F | G) + (H | I) => A
+J + K => B
+L + !N => I
+
+=LJGC
+?DEC
