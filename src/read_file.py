@@ -6,6 +6,6 @@ def read_file(name_file):
         res = f.read()
         f.close()
         return res
-    except:
-        print ("Read file error.")
+    except Exception as e:
+        print (f"Read file error: {e}")
         sys.exit(1)

@@ -1,0 +1,9 @@
+A + B => C + D + U # A, B, C and D are True
+L + E + Z + W <=> F # F, L and E are True
+Y <=> F
+
+=ABF
+?CDU
+
+# assertions
+# =ABFCDLEZWUY

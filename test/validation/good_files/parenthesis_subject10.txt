@@ -1,0 +1,8 @@
+A | B + C => E # E is true
+(F | G) + H => E # E is true(F | G) + H => # E is true # E is true # E is true # E is true # E is true # E is true # E is true # E is true # E is true # E is true # E is true # E is true # E is true # E is true
+=FH
+?E
+
+
+# (F | G) + H =>
+# =FHE
