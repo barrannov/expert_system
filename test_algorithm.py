@@ -1,7 +1,7 @@
 import pytest
 
 from src.read_file import *
-from src.validation import *
+from src.new_validation import *
 from src.new_solution import start_solution
 
 FULL_PATH = '/Users/abaranov/projects/expert_system'

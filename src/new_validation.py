@@ -108,7 +108,7 @@ def init_bool_vars(buffer, vals):
     vals['vars'] = d_tmp
     vals['unknown_vars'] = [x for x in x_none]
 
-    return (vals)
+    return vals
 
 
 
@@ -237,4 +237,4 @@ def validation (buffer) :
     validation_brackets(vals)
     validation_operators(vals)
 
-    return buf
+    return vals
