@@ -154,9 +154,10 @@ def validation_brackets(d):
 def error(y, x, n):
     raise Exception("Invalid file syntax: line " + str(y), "error in", x, "number ", n)
 
+def check_valid_char(x):
+    print(x)
 
 def validation_operators(d):
-    # print(d)
     y = 0
     for x in d['conditions']:
         old = '0'
@@ -164,35 +165,38 @@ def validation_operators(d):
         old_n = ''
         j = 0
         for n in x:
+            # check_valid_char(x)
             if (re.search(r'[A-Z\']', n)):
                 now = 'v'
             elif (re.search(r'[!+|^\']', n)):
                 now = 'o'
-            elif (re.search(r'[<=>]', n)):
+            elif (re.search(r'<=>', n) or re.search(r'=>', n)):
                 now = "e"
+            elif (re.search(r'[\(\)]', n)):
+                now = "b"
             else:
-                now = n
+                raise Exception("Invalid file syntax: invalid operator ", n,  ", error end in ", x)
 
-            if ((len(n) == 2 and n != ("=>")) or (len(n) == 3 and n != "<=>")):
+            if ((len(n) == 2 or len(n) == 3) and now != "e"):
                 error(y, x, 1)
             elif ((now == "v" and old == "v") or (now == "o" and old == "o" and n != "!")): # C C => E  |OR|  C <=> <=> E
                 error(y, x, 2)
-            elif now == "o" and ((old == "(" or old == "0" or old == "=>" or old == "e") and n != "!"):
+            elif now == "o" and ((old_n == "(" or old == "0" or old_n == "=>" or old == "e") and n != "!"):
                 error(y, x, 3)
-            elif (now == 'v' and old == ")"):
+            elif (now == 'v' and old_n == ")"):
                 error(y, x, 4)
-            elif now == ")" and old == "(":
+            elif n == ")" and old_n == "(":
                 error(y, x, 5)
             elif (now == ")" and (old == "o" or old == '0')):
                 error(y, x, 6)
             elif (now == "e" and (old == "o" or old == "0")):
                 error(y, x, 7)
-            elif (n == "!" and (((old == "v" or old == ")") and old != "0") or old_n == "!")): # !A => A  |OR|  !!A => B
+            elif (n == "!" and (((old == "v" or old_n == ")") and old != "0") or old_n == "!")): # !A => A  |OR|  !!A => B
                 error(y, x, 8)
             old = now
             old_n = n
             j += 1
-            if (j == len(x)) and (now != "v" and now != ")"):
+            if (j == len(x)) and (now != "v" and n != ")"):
                 raise Exception("Invalid file syntax: line " + str(y), "error end in ", x)
         y += 1
 
@@ -200,9 +204,8 @@ def set_spacing(buf):
     buffer = buf.replace("(", " ( ").replace(")", " ) ")
     buffer = buffer.replace("!", " ! ")
     buffer = buffer.replace("+", " + ").replace("|", " | ").replace("^", " ^ ")
-    buffer = buffer.replace("<=>", " <=> ").replace("=>", "=> ").replace("=> ", " =>")
-    # matches = re.findall()
-    # buffer = re.sub(r"(.+[^<])=>(.+)", "\1 => \2", buffer)
+    buffer = buffer.replace("<=>", " <=> ")
+    buffer = re.sub(r"(.*[^<])=>(.+)", r"\1 => \2", buffer)
 
     return buffer
 

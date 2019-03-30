@@ -86,6 +86,9 @@ if __name__ == '__main__':
 	good_files = [f for f in listdir(GOOD_FILES) if isfile(join(GOOD_FILES, f))]
 	print("\n\nTest good files")
 	test_good_files(good_files, GOOD_FILES)
+	files_count = len(bad_files1) + len(bad_files2) + len(bad_files3) + len(good_files)
+	print(f"\nTESTED ON {files_count} files")
+
 
 
 
