@@ -35,14 +35,13 @@ def _solve_logic(a, b, operator):
     if not a or not b:
         return None
 
+    res = 'False'
+
     if a == 'True' or a == 'False':
         a = eval(a)
 
     if b == 'True' or b == 'False':
         b = eval(b)
-
-    # if a is None or b is None:
-    #     return None
 
     if operator == '^':
         res = a != b
@@ -123,14 +122,10 @@ def _solve_postfix(postfix_list, condition=False, conclusion=False):
                 operand1, operand2 = _validate_conclusion_operands(operand1, operand2, token)
 
             result = _solve_logic(operand1, operand2, token)
-            # if result is None:
-            #     return None
-
             operand_stack.push(result)
-            neg = False
+
     final_value = operand_stack.pop()
     return final_value
-
 
 
 def solve_expression(expression, condition=False, conclusion=False):
