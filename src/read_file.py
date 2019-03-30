@@ -1,11 +1,7 @@
-import sys
-
-def read_file(name_file):
-    try:
-        f = open(name_file, 'r')
-        res = f.read()
-        f.close()
-        return res
+def read_buffer(name_file):
+     try:
+        with open(name_file, "r") as f:
+            return f.read()
     except Exception as e:
-        print (f"Read file error: {e}")
-        sys.exit(1)
+        print("Invalid file provided.\n")
+        raise
