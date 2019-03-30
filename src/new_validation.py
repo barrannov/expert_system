@@ -11,7 +11,6 @@ def delete_comments(buffer):
 
 def delete_spacing(buffer):
     i = 0
-
     for x in buffer:
         buffer[i] = x.split(" ")
         i += 1
@@ -157,7 +156,7 @@ def error(y, x, n):
 
 
 def validation_operators(d):
-    print(d)
+    # print(d)
     y = 0
     for x in d['conditions']:
         old = '0'
@@ -201,7 +200,9 @@ def set_spacing(buf):
     buffer = buf.replace("(", " ( ").replace(")", " ) ")
     buffer = buffer.replace("!", " ! ")
     buffer = buffer.replace("+", " + ").replace("|", " | ").replace("^", " ^ ")
-    buffer = buffer.replace("=>", " => ").replace("<=>", " <=> ")
+    buffer = buffer.replace("<=>", " <=> ").replace("=>", "=> ").replace("=> ", " =>")
+    # matches = re.findall()
+    # buffer = re.sub(r"(.+[^<])=>(.+)", "\1 => \2", buffer)
 
     return buffer
 
