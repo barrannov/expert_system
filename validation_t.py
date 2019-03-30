@@ -2,7 +2,7 @@ import sys
 from os import listdir
 from os.path import isfile, join
 
-from src.read_file import *
+from src.read_file import read_buffer as rd
 from src.read_file import *
 from src.new_validation import *
 
@@ -21,8 +21,8 @@ def test_bad_files(filelist, path):
 	for f in filelist:
 		i += 1
 		try:
-			read_buffer = read_file(f'{path}{f}')
-			parsed_data = validation(read_buffer)
+			read_buffer = rd(f'{path}{f}')
+			validation(read_buffer)
 
 			result(i, False, None, f'{path}{f}')
 		except Exception as e:
@@ -35,8 +35,8 @@ def test_good_files(filelist, path):
 	for f in filelist:
 		i += 1
 		try:
-			read_buffer = read_file(f'{path}{f}')
-			parsed_data = validation(read_buffer)
+			read_buffer = rd(f'{path}{f}')
+			validation(read_buffer)
 
 			result(i, True, None, f'{path}{f}')
 		except Exception as e:
@@ -61,9 +61,6 @@ def result(test_num=0, success=False, e=None, file=''):
 	else :
 		print(FAIL + f'Test {test_num} FAIL' + END)	
 			
-
-
-
 
 if __name__ == '__main__':
 

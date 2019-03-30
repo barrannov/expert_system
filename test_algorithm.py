@@ -1,6 +1,6 @@
 import pytest
 
-from src.read_file import *
+from src.read_file import read_buffer
 from src.new_validation import *
 from src.new_solution import start_solution
 
@@ -11,8 +11,8 @@ VALID_ALGORITHM_TEST = f'{FULL_PATH}/test/algorithm_tests/valid_test_'
 
 
 def test_algorithm_00001():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00001.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00001.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'A': 'True',
@@ -26,8 +26,8 @@ def test_algorithm_00001():
 
 
 def test_algorithm_00002():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00002.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00002.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'A': 'False',
@@ -38,8 +38,8 @@ def test_algorithm_00002():
 
 
 def test_algorithm_00003():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00003.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00003.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'A': 'False',
@@ -49,8 +49,8 @@ def test_algorithm_00003():
 
 
 def test_algorithm_00004():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00004.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00004.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'A': 'True',
@@ -60,8 +60,8 @@ def test_algorithm_00004():
 
 
 def test_algorithm_00005():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00005.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00005.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'A': 'False',
@@ -71,8 +71,8 @@ def test_algorithm_00005():
 
 
 def test_algorithm_00006():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00006.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00006.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'E': 'False',
@@ -82,8 +82,8 @@ def test_algorithm_00006():
 
 
 def test_algorithm_00007():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00007.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00007.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'B': 'False',
@@ -95,8 +95,8 @@ def test_algorithm_00007():
 
 
 def test_algorithm_00008():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00008.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00008.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'C': 'True',
@@ -109,8 +109,8 @@ def test_algorithm_00008():
 
 
 def test_algorithm_00009():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00009.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00009.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'C': 'True',
@@ -123,8 +123,8 @@ def test_algorithm_00009():
 
 
 def test_algorithm_00010():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00010.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00010.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'C': 'False',
@@ -137,8 +137,8 @@ def test_algorithm_00010():
 
 
 def test_algorithm_00011():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00011.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00011.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'D': 'True',
@@ -149,8 +149,8 @@ def test_algorithm_00011():
 
 
 def test_algorithm_00012():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00012.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00012.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'C': 'True',
@@ -161,8 +161,8 @@ def test_algorithm_00012():
 
 
 def test_algorithm_00013():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00013.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00013.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'D': 'True',
@@ -174,8 +174,8 @@ def test_algorithm_00013():
 
 
 def test_algorithm_00014():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00014.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00014.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'C': 'True',
@@ -197,8 +197,8 @@ def test_algorithm_00014():
 
 
 def test_algorithm_00015():
-    read_buffer = read_file(f'{VALID_ALGORITHM_TEST}00015.txt')
-    parsed_data = validation(read_buffer)
+    buff = read_buffer(f'{VALID_ALGORITHM_TEST}00015.txt')
+    parsed_data = validation(buff)
 
     expected_result = {
         'C': 'True'
