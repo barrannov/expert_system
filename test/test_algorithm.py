@@ -4,7 +4,10 @@ from src.read_file import *
 from src.validation import *
 from src.new_solution import start_solution
 
-VALID_ALGORITHM_TEST = 'test/algorithm_tests/valid_test_'
+FULL_PATH = '/Users/abaranov/projects/expert_system'
+
+VALID_ALGORITHM_TEST = f'{FULL_PATH}/test/algorithm_tests/valid_test_'
+
 
 
 def test_algorithm_00001():
